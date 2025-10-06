@@ -1,0 +1,46 @@
+# Support Discord Bot
+
+Бот для Discord на Python, поддерживающий напоминания и планировщик (cron).  
+Работает на базе `discord.py`, `aiosqlite` и `APScheduler`.
+
+## Возможности
+- `/remind` — разовое напоминание через N минут (для себя или указанного пользователя).  
+- `/addcron` — создание повторяющихся сообщений (ежедневно, будни, выходные, по дням недели).  
+- `/listcrons` — список активных задач.  
+- `/delcron` — удаление задачи по ID.  
+- `/set_default_channel` — указание основного канала для дефолтных сообщений.  
+- `/phrase_add`, `/phrase_list`, `/phrase_del` — управление списком фраз для ежедневного сообщения.  
+- Ежедневный дефолтный крон: в 10:30 бот пишет случайную фразу в основной канал.
+
+## Установка
+1. Клонировать репозиторий и установить зависимости:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+2. Создать файл `.env` в корне проекта:
+   ```dotenv
+   DISCORD_TOKEN=твой_токен
+   DB_PATH=.data/data.db
+   TZ=Europe/Tallinn
+   GUILD_IDS=[123456789012345678]  # опционально, ID серверов для быстрого sync команд
+   ```
+
+3. Запуск бота:
+   ```bash
+   python -m src.cronbot.main
+   ```
+
+## Структура
+- `src/cronbot/bot.py` — точка сборки бота.  
+- `src/cronbot/cogs/` — команды (cron, misc, phrases).  
+- `src/cronbot/services/` — работа с БД и логика.  
+- `src/cronbot/db.py` — подключение и схема SQLite.  
+- `src/cronbot/scheduler.py` — планировщик задач.
+
+## Замечания
+- Глобальные команды Discord обновляются до часа. Для разработки укажи `GUILD_IDS` для мгновенного sync.  
+- Фразы для дефолтного крона можно пополнять командами `/phrase_add`.  
+
