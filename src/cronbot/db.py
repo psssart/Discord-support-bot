@@ -27,6 +27,16 @@ CREATE TABLE IF NOT EXISTS guild_settings (
   guild_id INTEGER PRIMARY KEY,
   default_channel_id INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS confronts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  guild_id INTEGER NOT NULL,
+  target_user_id INTEGER NOT NULL,
+  trigger_reaction TEXT,
+  counter_reaction TEXT NOT NULL,
+  created_by INTEGER NOT NULL,
+  created_at TEXT NOT NULL
+);
 """
 
 

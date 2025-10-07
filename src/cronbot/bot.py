@@ -18,6 +18,8 @@ from .services.phrases import PhraseService
 from .cogs.cron import CronCog
 from .cogs.misc import MiscCog
 from .cogs.phrases import PhrasesCog
+from .services.confronts import ConfrontService
+from .cogs.confronts import ConfrontsCog
 
 RANDOM_MARKER = "__RANDOM_PHRASE__"
 
@@ -197,6 +199,7 @@ async def create_bot() -> commands.Bot:
     reminder_service = ReminderService(db, cfg.TZ)
     phrase_service = PhraseService(db)
     send_fn = _make_send_fn(bot, phrase_service)
+    confront_service = ConfrontService(db)
 
     # простой DI в объект бота
     bot._cfg = cfg                 # type: ignore[attr-defined]
@@ -205,11 +208,13 @@ async def create_bot() -> commands.Bot:
     bot._service = reminder_service# type: ignore[attr-defined]
     bot._phrases = phrase_service  # type: ignore[attr-defined]
     bot._send_fn = send_fn         # type: ignore[attr-defined]
+    bot._confronts = confront_service # type: ignore[attr-defined]
 
     # коги
     await bot.add_cog(CronCog(bot, reminder_service, scheduler))
     await bot.add_cog(MiscCog(bot, cfg.TZ))
     await bot.add_cog(PhrasesCog(bot, phrase_service))
+    await bot.add_cog(ConfrontsCog(bot, confront_service))
 
     @bot.event
     async def on_ready():

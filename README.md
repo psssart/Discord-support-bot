@@ -10,14 +10,26 @@
 - `/delcron` — удаление задачи по ID.  
 - `/set_default_channel` — указание основного канала для дефолтных сообщений.  
 - `/phrase_add`, `/phrase_list`, `/phrase_del` — управление списком фраз для ежедневного сообщения.  
+- `/confront` — создать правило: следить за сообщениями пользователя, при триггере ставить контр‑реакцию.  
+- `/confront_list` — список всех confront‑правил.  
+- `/confront_remove` — удалить правило по ID.  
+- Ежедневный дефолтный крон: в 10:30 бот пишет случайную фразу в основной канал.
+
+
+- `/remind` — разовое напоминание через N минут (для себя или указанного пользователя).  
+- `/addcron` — создание повторяющихся сообщений (ежедневно, будни, выходные, по дням недели).  
+- `/listcrons` — список активных задач.  
+- `/delcron` — удаление задачи по ID.  
+- `/set_default_channel` — указание основного канала для дефолтных сообщений.  
+- `/phrase_add`, `/phrase_list`, `/phrase_del` — управление списком фраз для ежедневного сообщения.  
 - Ежедневный дефолтный крон: в 10:30 бот пишет случайную фразу в основной канал.
 
 ## Установка
 1. Клонировать репозиторий и установить зависимости:
    ```bash
    python -m venv .venv
-   source .venv/bin/activate  # Windows: .venv\Scripts\activate
-   pip install -r requirements.txt
+   .venv\Scripts\activate  # || Linux/Mac: source .venv/bin/activate
+   uv sync --group dev
    ```
 
 2. Создать файл `.env` в корне проекта:
@@ -35,8 +47,8 @@
 
 ## Структура
 - `src/cronbot/bot.py` — точка сборки бота.  
-- `src/cronbot/cogs/` — команды (cron, misc, phrases).  
-- `src/cronbot/services/` — работа с БД и логика.  
+- `src/cronbot/cogs/` — команды (cron, misc, phrases, confronts).  
+- `src/cronbot/services/` — работа с БД и логика (reminder, phrases, confronts).  
 - `src/cronbot/db.py` — подключение и схема SQLite.  
 - `src/cronbot/scheduler.py` — планировщик задач.
 
