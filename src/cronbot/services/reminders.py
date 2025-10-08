@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 import aiosqlite
 from ..db import Database
@@ -34,7 +34,7 @@ class ReminderService:
                 "INSERT INTO crons (guild_id, channel_id, user_id, preset, time_h, time_m, tz, text, targetUser, created_at)"
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (guild_id, channel_id, user_id, preset, h, m, self.tz.key, text, targetUser,
-                 datetime.utcnow().isoformat())
+                 datetime.now(timezone.utc).isoformat())
             )
             await db.commit()
             cur = await db.execute("SELECT last_insert_rowid()")

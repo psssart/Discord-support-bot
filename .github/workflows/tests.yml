@@ -1,0 +1,32 @@
+name: tests
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies (dev)
+        run: |
+          uv sync --group dev
+          # ensure project is importable even without editable install
+          # conftest handles src/ path, but we still install to catch packaging issues
+          uv pip install -e .
+
+      - name: Run tests
+        run: uv run pytest -q

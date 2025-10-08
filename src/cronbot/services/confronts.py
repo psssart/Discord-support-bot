@@ -1,5 +1,5 @@
 from __future__ import annotations
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, List, Dict, Any
 import aiosqlite
 
@@ -15,7 +15,7 @@ class ConfrontService:
             cur = await db.execute(
                 """INSERT INTO confronts (guild_id, target_user_id, trigger_reaction, counter_reaction, created_by, created_at)
                    VALUES (?, ?, ?, ?, ?, ?)""",
-                (guild_id, target_user_id, trigger_reaction, counter_reaction, created_by, datetime.utcnow().isoformat())
+                (guild_id, target_user_id, trigger_reaction, counter_reaction, created_by, datetime.now(timezone.utc).isoformat())
             )
             await db.commit()
             return cur.lastrowid

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import aiosqlite
 from ..db import Database
 import random
@@ -12,7 +12,7 @@ class PhraseService:
         try:
             await db.execute(
                 "INSERT INTO phrases (guild_id, text, created_at) VALUES (?, ?, ?)",
-                (guild_id, text, datetime.utcnow().isoformat())
+                (guild_id, text, datetime.now(timezone.utc).isoformat())
             )
             await db.commit()
             cur = await db.execute("SELECT last_insert_rowid()")
@@ -60,7 +60,7 @@ class PhraseService:
             (count,) = await cur.fetchone()
             if count:
                 return 0
-            now = datetime.utcnow().isoformat()
+            now = datetime.now(timezone.utc).isoformat()
             await db.executemany(
                 "INSERT INTO phrases (guild_id, text, created_at) VALUES (?, ?, ?)",
                 [(guild_id, p, now) for p in phrases if p.strip()]

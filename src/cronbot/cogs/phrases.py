@@ -28,3 +28,14 @@ class PhrasesCog(commands.Cog):
         await itx.response.defer(ephemeral=True)
         ok = await self.svc.delete_phrase(itx.guild_id, id)
         await itx.followup.send("Удалил." if ok else "Такой фразы нет.")
+
+    @commands.hybrid_command(name="phrase", description="Выдать случайную фразу")
+    async def phrase(self, ctx:commands.Context):
+        if ctx.guild is None:
+            await ctx.reply("Эта команда доступна только на сервере.")
+            return
+        text = await self.phrases.get_random(ctx.guild.id)
+        if text is None:
+            await ctx.reply("Список фраз пуст.")
+        else:
+            await ctx.reply(text)

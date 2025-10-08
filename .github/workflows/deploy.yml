@@ -7,17 +7,19 @@ on:
       - "src/cronbot/**"
       - "pyproject.toml"
       - "uv.lock"
-      - "scripts/deploy.sh"
-      - ".github/workflows/deploy.yml"
-
-concurrency:
-  group: deploy-cronbot
-  cancel-in-progress: true
+      - "scripts/**"
+      - ".github/workflows/**"
+  workflow_dispatch:
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    uses: .github/workflows/tests.yml
+    secrets: inherits
+
   deploy:
     runs-on: ubuntu-latest
-
+    needs: test
     steps:
       - name: Checkout (shallow)
         uses: actions/checkout@v4
