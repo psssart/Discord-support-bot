@@ -13,9 +13,8 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    uses: .github/workflows/tests.yml
-    secrets: inherits
+    uses: ./.github/workflows/tests.yml
+    secrets: inherit
 
   deploy:
     runs-on: ubuntu-latest
