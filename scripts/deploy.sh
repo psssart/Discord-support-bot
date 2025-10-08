@@ -16,4 +16,8 @@ sudo -u cronbot bash -lc "
 
 sudo systemctl restart cronbot
 # sudo systemctl restart cronbot-health
-echo 'deploy: OK'
+
+echo "===> Git reset и зависимости обновлены"
+sudo systemctl status cronbot --no-pager -l | head -n 20
+
+# curl -fsS https://cronbot.example.com/healthz || echo "healthcheck failed"
