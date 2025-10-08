@@ -25,11 +25,14 @@ jobs:
           fetch-depth: 0
 
       - name: Prepare SSH
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          PORT: ${{ secrets.DEPLOY_PORT }}
         run: |
           install -m 700 -d ~/.ssh
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          ssh-keyscan -T 10 -p "$PORT" -H -t rsa,ecdsa,ed25519 "$HOST" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
       - name: Deploy over SSH (run repo script)
@@ -38,4 +41,4 @@ jobs:
           PORT: ${{ secrets.DEPLOY_PORT }}
           USER: ${{ secrets.DEPLOY_USER }}
         run: |
-           ssh -i ~/.ssh/deploy_key -p "$PORT" "$USER@$HOST" 'bash -seuo pipefail' < scripts/deploy.sh
+          ssh -i ~/.ssh/deploy_key -p "$PORT" "$USER@$HOST" 'bash -seuo pipefail' < scripts/deploy.sh
