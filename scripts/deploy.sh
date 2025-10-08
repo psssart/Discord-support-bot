@@ -18,6 +18,6 @@ sudo systemctl restart cronbot
 # sudo systemctl restart cronbot-health
 
 echo "===> Git reset и зависимости обновлены"
-sudo systemctl status cronbot --no-pager -l | head -n 20
+systemctl status cronbot --no-pager -l | head -n 20
 
 # curl -fsS https://cronbot.example.com/healthz || echo "healthcheck failed"
