@@ -11,4 +11,3 @@ class CronEntry:
     time_m: int
     tz: str
     text: str
-
