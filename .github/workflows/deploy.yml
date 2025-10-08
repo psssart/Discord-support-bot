@@ -1,0 +1,41 @@
+name: Deploy CronBot
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "src/cronbot/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - "scripts/deploy.sh"
+      - ".github/workflows/deploy.yml"
+
+concurrency:
+  group: deploy-cronbot
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (shallow)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Deploy over SSH (run repo script)
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          PORT: ${{ secrets.DEPLOY_PORT }}
+          USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+           ssh -i ~/.ssh/deploy_key -p "$PORT" "$USER@$HOST" 'bash -seuo pipefail' < scripts/deploy.sh
